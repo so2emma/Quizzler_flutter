@@ -1,4 +1,3 @@
 # quizzler
 
-A new Flutter project.
-
+below are the interfaces of the mobile app
