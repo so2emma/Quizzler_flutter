@@ -1,5 +1,4 @@
-// import 'dart:ffi';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
 
@@ -36,24 +35,48 @@ class _QuizPageState extends State<QuizPage> {
 
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getCorrectAnswer();
-
     setState(() {
-      if (correctAnswer == userPickedAnswer) {
-        scoreKeeper.add(
-          Icon(
-            Icons.check,
-            color: Colors.green,
-          ),
-        );
+      if (quizBrain.isFinished()) {
+        Alert(
+          context: context,
+          type: AlertType.success,
+          title: "Quiz Complete",
+          desc: "you have reached the end of the quiz",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              width: 120,
+              color: Colors.red,
+            )
+          ],
+        ).show();
+        quizBrain.reset();
+        scoreKeeper = [];
+        quizBrain.nextQuestion();
       } else {
-        scoreKeeper.add(
-          Icon(
-            Icons.check,
-            color: Colors.red,
-          ),
-        );
+        if (correctAnswer == userPickedAnswer) {
+          scoreKeeper.add(
+            Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          scoreKeeper.add(
+            Icon(
+              Icons.check,
+              color: Colors.red,
+            ),
+          );
+        }
+        quizBrain.nextQuestion();
       }
-      quizBrain.nextQuestion();
     });
   }
 
